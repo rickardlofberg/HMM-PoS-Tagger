@@ -1,15 +1,15 @@
 """
-Takes the name of a corpus to check and retirns two dictionaries
-one with word probability given tag
-the other tag probability given previous tag
+Takes the relative link to a corpus to read and return two dictionaries
+The first dict has the emission probability of a word given a PoS-tagBigram
+The Second dict has the transition probability from one tag to another
 """
 def probability(corpus):
-    wordTagCount = dict()
-    tagBigrams = dict()
-    tagCount = dict()
+    wordTagCount = dict() # Tag = PoS-tag, structure : {PoS : {word1 : count}, {word2 : count}}
+    tagBigrams = dict() # PoS-Bigram, structure : {PoS PoS : count}
+    tagCount = dict() # Count of PoS-tags
 
     # Read each line in corpus
-    # Each line should have a tag and an output. No output is represented as ''
+    # Each line should have a PoS-tag and a word. No word is represented as ''
     for line in open(corpus, "r"):
         tag = line.split()[0]
         word = line.split()[1]
@@ -49,7 +49,8 @@ def probability(corpus):
         wordTagProb[tag] = {}
         for word in wordTagCount[tag]:
             wordTagProb[tag][word] = float(wordTagCount[tag][word] / tagCount[tag])
-
+    
+    print(wordTagProb)
     return tagProb, wordTagProb
 
 #print(probability("corpus.txt"))
