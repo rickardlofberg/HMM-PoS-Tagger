@@ -5,8 +5,12 @@ The Second dict has the transition probability from one tag to another
 """
 def probability(corpus):
     wordTagCount = dict() # Tag = PoS-tag, structure : {PoS : {word1 : count}, {word2 : count}}
-    tagBigrams = dict() # PoS-Bigram, structure : {PoS PoS : count}
+    tagBigrams = dict() # PoS-Bigram, structure : {PoS PoS : count}r
+    tagTrigrams = dict()
     tagCount = dict() # Count of PoS-tags
+
+    # Initiate vars
+    prevTag = ''
 
     # Read each line in corpus
     # Each line should have a PoS-tag and a word. No word is represented as ''
@@ -16,11 +20,17 @@ def probability(corpus):
 
         # To avoid bigrams where start is the second part
         if tag != 'start':
-            # Build bigram
+            # to fix trigrams
+            if prevTag == 'start':
+                prev2Tag = prevTag
+
+            # Build bigram and trigram
             tagBigram = prevTag + " " + tag
+            tagTrigram = prev2Tag + " " + tagBigram
 
             # Build and update dictionary
             tagBigrams[tagBigram] = tagBigrams.get(tagBigram, 0) + 1
+            tagTrigrams[tagTrigram] = tagTrigrams.get(tagTrigram, 0) + 1
     
         # If the tag has output, create/update tag -> output count dictionary
         if word != "''":
@@ -33,11 +43,18 @@ def probability(corpus):
         if tag != 'slut':
             tagCount[tag] = tagCount.get(tag, 0) + 1
   
+        prev2Tag = prevTag
         prevTag = tag
 
     # Calculate probabilities
     tagProb = dict()
+    tag2Prob = dict()
     wordTagProb = dict()
+
+    # P(Ti-2, Ti-1, ti)
+    for trigram in tagTrigrams:
+        firstPosTag = trigram.split()[0]
+        tag2Prob[trigram] = tagTrigrams[trigram] / tagCount[firstPosTag]
 
     # P(Ti-1, ti)
     for bigram in tagBigrams:
@@ -50,17 +67,20 @@ def probability(corpus):
         for word in wordTagCount[tag]:
             wordTagProb[tag][word] = float(wordTagCount[tag][word] / tagCount[tag])
     
-    print(wordTagProb)
-    return tagProb, wordTagProb
+    return tagProb, tag2Prob, wordTagProb
 
 #print(probability("corpus.txt"))
 with open("prob.txt", "w") as PB:
     x = 0
     for i in probability("corpus.txt"):
         if x == 0:
-            PB.write("Transition probability:\n")
+            PB.write("Transition bigram probability:\n")
         elif x == 1:
+            PB.write("Transition trigram probability:\n")
+        elif x == 2:
             PB.write("Emission probability:\n")
         x += 1
         for t, v in sorted(i.items()):
             PB.write(str(t) + "\t" + str(v)  + "\n")
+
+
