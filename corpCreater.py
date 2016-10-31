@@ -56,7 +56,7 @@ def createCorpus(corpusName, sentences=numberOfSequences):
                 state = randomState(stateTransitions, state)
                 if state != 'slut':
                     out.write(randomState(observations, state) + "\t" + state + "\n")
-                    out.write("\n") 
+            out.write("\n") 
 
 
 if '__main__' == __name__:
