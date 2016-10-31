@@ -47,13 +47,17 @@ outputFileName = "corpus.txt"
 
 #######################################################################################
 
-"""This code will generate a controlled corpus for testing"""
-with open(outputFileName, 'w') as out:
-    for i in range(numberOfSequences):
-        state = 'start'
-        while state != 'slut':
-            state = randomState(stateTransitions, state)
-            if state != 'slut':
-                out.write(randomState(observations, state) + "\t" + state + "\n")
-        out.write("\n") 
+def createCorpus(corpusName, sentences=numberOfSequences):
+    """This code will generate a controlled corpus for testing"""
+    with open(corpusName, 'w') as out:
+        for i in range(sentences):
+            state = 'start'
+            while state != 'slut':
+                state = randomState(stateTransitions, state)
+                if state != 'slut':
+                    out.write(randomState(observations, state) + "\t" + state + "\n")
+                    out.write("\n") 
 
+
+if '__main__' == __name__:
+    createCorpus(outputFileName)
