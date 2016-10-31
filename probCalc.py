@@ -89,19 +89,23 @@ def probability(corpus):
     return uniProb, biProb, triProb, wordProb
 
 
-"""This is used to create a more human readable file to check output"""
-with open("probability_test", 'w') as PB:
-    x = 0
-    for i in probability("corpus.txt"):
-        if x == 0:
-            PB.write("Transition unigram probability:\n")
-        elif x == 1:
-            PB.write("Transition bigram probability:\n")
-        elif x == 2:
-            PB.write("Transition trigram probability:\n")
-        elif x == 3:
-            PB.write("Emission probability:\n")
-        x += 1
-        for t, v in sorted(i.items()):
-            PB.write(str(t) + "\t" + str(v)  + "\n")
+
+def calcluateProb(corpus="corpus.txt", outputFile="prob.txt"):
+    """This is used to create a more human readable file to check output"""
+    with open(outputFile, 'w') as PB:
+        x = 0
+        for i in probability(corpus):
+            if x == 0:
+                PB.write("Transition unigram probability:\n")
+            elif x == 1:
+                PB.write("Transition bigram probability:\n")
+            elif x == 2:
+                PB.write("Transition trigram probability:\n")
+            elif x == 3:
+                PB.write("Emission probability:\n")
+                x += 1
+                for t, v in sorted(i.items()):
+                    PB.write(str(t) + "\t" + str(v)  + "\n")
         
+if '__main__' == __name__:
+    calculateProb()
