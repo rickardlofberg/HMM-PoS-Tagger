@@ -47,22 +47,13 @@ outputFileName = "corpus.txt"
 
 #######################################################################################
 
+"""This code will generate a controlled corpus for testing"""
+with open(outputFileName, 'w') as out:
+    for i in range(numberOfSequences):
+        state = 'start'
+        while state != 'slut':
+            state = randomState(stateTransitions, state)
+            if state != 'slut':
+                out.write(randomState(observations, state) + "\t" + state + "\n")
+        out.write("\n") 
 
-# This runs the code
-
-outputFile = open(outputFileName, 'w')
-
-for i in range(numberOfSequences):
-    # set state
-    state = 'start'
-    outputFile.write(str(state) + "\t" + "''\n")
-    # Create new sequence
-    while state != 'slut':
-        state = randomState(stateTransitions, state)
-        if state != 'slut':
-            outputFile.write(state + "\t" + randomState(observations, state) + "\n")
-    
-    outputFile.write(state + "\t" + "''\n")
-
-# Close file
-outputFile.close()
