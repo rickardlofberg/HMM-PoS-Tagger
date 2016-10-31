@@ -1,6 +1,18 @@
 * Things TODO
-1. Clean corpus
-2. Refactor and update the tagger
-3. Evaluate the tagger
-4. Parse for 10-fold validation
+
+** Build a tagger
+A tagger which takes a sentence and tags it
+
+** Function to feed the tagger
+A function which parses a corpus and feeds the tagger one sentence at a time, possibly write the output to a file
+
+** Something that evaluates the tagging
+Compare the tagged corpus to our tagger, how good is it?
+
+** Something which cleans the corpus for us
+This code should clean the corpus so that we can parse it
+
+** Something which divide the corups in 10 pars for 10-fold validation
+We should train on 9 of the parts and hide the tenth part, this one we tag and evaluate.
+
 
