@@ -36,7 +36,7 @@ def probability(corpus):
             else:
                 # Update word and current PoS tag
                 word, t0 = line.strip().split("\t")
-            
+
             # Trigram, bigram and unigram count
             trigram = ' '.join([t2, t1, t0]) # Create trigram
             trigrams[trigram] = trigrams.get(trigram, 0) + 1 # Add to dict
@@ -88,8 +88,6 @@ def probability(corpus):
     #print(sum(unigrams.values()))
     return uniProb, biProb, triProb, wordProb
 
-
-
 def calcluateProb(corpus="corpus.txt", outputFile="prob.txt"):
     """This is used to create a more human readable file to check output"""
     with open(outputFile, 'w') as PB:
@@ -103,9 +101,10 @@ def calcluateProb(corpus="corpus.txt", outputFile="prob.txt"):
                 PB.write("Transition trigram probability:\n")
             elif x == 3:
                 PB.write("Emission probability:\n")
-                x += 1
-                for t, v in sorted(i.items()):
-                    PB.write(str(t) + "\t" + str(v)  + "\n")
-        
+            x += 1
+            for t, v in sorted(i.items()):
+                PB.write(str(t) + "\t" + str(v)  + "\n")
+                    
 if '__main__' == __name__:
-    calculateProb()
+    calcluateProb()
+
