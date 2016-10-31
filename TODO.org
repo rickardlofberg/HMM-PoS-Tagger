@@ -1,6 +1,6 @@
 * Things TODO
-1. Add trigram functionality to trellisHMM
-2. Clean part of data
-3. Calculate prob on data
-4. Tag data with calculated prob
-5. Eval resuts
+1. Clean corpus
+2. Refactor and update the tagger
+3. Evaluate the tagger
+4. Parse for 10-fold validation
+
