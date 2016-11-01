@@ -15,4 +15,3 @@ This code should clean the corpus so that we can parse it
 ** Something which divide the corups in 10 pars for 10-fold validation
 We should train on 9 of the parts and hide the tenth part, this one we tag and evaluate.
 
-
