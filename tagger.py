@@ -73,10 +73,13 @@ class Tagger():
 
         # Return the Pos sequence without the two starting tags
         return currentPaths[0][1][2:-1]
-        
-import probCalc
 
-uni, bi, tri, word = probCalc.probability("corpus.txt")
-t = Tagger(uni, bi, tri, word)
+if __name__ == '__main__':        
+    import probCalc
 
-print(t.tagSentence(['kvack', 'mu', 'mu', 'kvack']))
+    uni, bi, tri, word = probCalc.probability("corpus.txt")
+    t = Tagger(uni, bi, tri, word)
+
+    oprint(t.tagSentence(['kvack', 'mu', 'mu', 'kvack']))
+
+
