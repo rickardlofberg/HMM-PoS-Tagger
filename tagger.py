@@ -1,5 +1,3 @@
-
-
 class Tagger():
 
     def __init__(self, uniProb, biProb, triProb, wordProb):
@@ -8,21 +6,18 @@ class Tagger():
         self.biProb = biProb
         self.triProb = triProb
         self.wordProb = wordProb
+        self.endTag = {'end' : 1.0}
 
         # Dictionary for when word not found
         self.posTags = dict()
         for tag in self.uniProb.keys():
             self.posTags[tag] = 1 / len(self.uniProb)
-            
-        # There is a problem with the end tag and start tag
-
-
-            
+          
     def tagSentence(self, sentToTag):
         """Takes a sentence (sequenced list) and returns a list of same length with PoS-tags"""
         # Make sure it's a sentence
         if isinstance(sentToTag, list):
-            sentence = sentToTag + ['end']
+            sentence = sentToTag + [None]
         else:
             return "Sentence not submitted in the corret format"
 
@@ -39,6 +34,8 @@ class Tagger():
             
             # If there are tags for the word use them, otherwise check against all tags
             possibleTags = self.wordProb.get(word, self.posTags)
+            if word == None:
+                possibleTags = self.endTag
 
             # For each possible tag for that word
             for tag in possibleTags:
@@ -47,8 +44,9 @@ class Tagger():
                 # Go from all possible previous paths to current tag (node)
                 for path in currentPaths:
                     # Create bigram and trigram
-                    trigram = ' '.join(path[1][-2:] + [word])
-                    bigram = ' '.join(path[1][-1:] + [word])
+                    trigram = ' '.join(path[1][-2:] + [tag])
+                    bigram = ' '.join(path[1][-1:] + [tag])
+                    #bprint(trigram)
 
                     # We can calculate emission and old node value here
                     pathProb = path[0] * possibleTags[tag]
@@ -68,18 +66,14 @@ class Tagger():
             currentPaths = newPaths
             newPaths = []
 
-        """There should be an extra check where the 'end' tag is added."""
-
+        currentPaths = max(currentPaths)
 
         # Return the Pos sequence without the two starting tags
-        return currentPaths[0][1][2:-1]
+        return currentPaths[1][2:-1]
 
 if __name__ == '__main__':        
     import probCalc
 
     uni, bi, tri, word = probCalc.probability("corpus.txt")
     t = Tagger(uni, bi, tri, word)
-
-    oprint(t.tagSentence(['kvack', 'mu', 'mu', 'kvack']))
-
 
