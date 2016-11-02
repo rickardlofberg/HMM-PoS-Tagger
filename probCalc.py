@@ -82,13 +82,9 @@ def probability(corpus):
         for tag in wordIsPoS[word]:
             wordProb[word][tag] = wordIsPoS[word][tag] / sum(wordIsPoS[word].values())
 
-    # Unigrams have more tags because of token start tags, is this correct?
-    #print(sum(trigrams.values()))
-    #print(sum(bigrams.values()))
-    #print(sum(unigrams.values()))
     return uniProb, biProb, triProb, wordProb
 
-def calcluateProb(corpus="corpus.txt", outputFile="prob.txt"):
+def calcluateProb(corpus="suc", outputFile="prob.txt"):
     """This is used to create a more human readable file to check output"""
     with open(outputFile, 'w') as PB:
         x = 0
@@ -107,4 +103,9 @@ def calcluateProb(corpus="corpus.txt", outputFile="prob.txt"):
                     
 if '__main__' == __name__:
     calcluateProb()
+
+
+
+
+
 
