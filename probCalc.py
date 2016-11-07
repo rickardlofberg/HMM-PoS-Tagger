@@ -1,7 +1,7 @@
 """
-Takes a corpus and calculate the probability for unigrams, bigrams, trigrams and a word belonging to a PoS tag
+Takes a list with lists representing sentences with (pos-tag, word) tupples and calculate the probability for unigrams, bigrams, trigrams and a word belonging to a PoS tag
 """
-def probability(corpus):
+def probability(listOfTuples):
     unigrams = dict() # Structure : {unigram : count}
     bigrams = dict() # Structure : {bigram : count}
     trigrams = dict() # Structure : {trigram : count}
@@ -24,19 +24,19 @@ def probability(corpus):
     t0 is "VB" (The one we are currently iteretaing on)
     """
 
-    # We expect the corpus to be a tab seperated file with a "word - PoS-tag" structure
-    with open(corpus, 'r') as corp:
-        """Parse and count he corpus"""
-        for line in corp:
-            # If line is a sentence seperator
-            if line == "\n":
+    """Parse and count he corpus"""
+    # For each sentece (list)
+    for sent in listOfTuples:
+
+        # For each (word, pos)-tag tupple
+        for wpTag in sent:
+            if wpTag[1] == '':
                 # Add a starttag to dict
                 unigrams[startTag] = unigrams.get(startTag, 0) + 1
                 word, t0 = '', endTag
             else:
-                # Update word and current PoS tag
-                word, t0 = line.strip().split("\t")
-
+                word, t0 = wpTag
+                
             # Trigram, bigram and unigram count
             trigram = ' '.join([t2, t1, t0]) # Create trigram
             trigrams[trigram] = trigrams.get(trigram, 0) + 1 # Add to dict
@@ -47,16 +47,15 @@ def probability(corpus):
             # Word counter
             if wordIsPoS.get(word, -1) == -1: # If no word create word
                 wordIsPoS[word] = {t0 : 0}
-            wordIsPoS[word][t0] = wordIsPoS[word].get(word, 0) + 1 # Always update
+            wordIsPoS[word][t0] = wordIsPoS[word].get(t0, 0) + 1 # Always update
 
-            # Set next iteration to have filler start tags
-            if line == "\n":
+            if wpTag[1] == '':
                 t2 = startTag
                 t1 = startTag
             else:
-                # Update tags
                 t2 = t1
                 t1 = t0
+
 
     """After counting we calculate the probabilities"""
     uniProb = dict()
@@ -84,11 +83,25 @@ def probability(corpus):
 
     return uniProb, biProb, triProb, wordProb
 
-def calcluateProb(corpus="suc", outputFile="prob.txt"):
+
+def calcluateProb(corpus="suc", outputFile="prob2.txt"):
     """This is used to create a more human readable file to check output"""
+    data = []
+    senTag = []
+    w, t = '', ''
+    with open(corpus, 'r') as C:
+        for line in C:
+            if line == '\n':
+                senTag.append(('', ''))
+                data.append(senTag)
+                senTag = []
+            else:
+               w, t = line.strip().split('\t')
+               senTag.append((w, t))
+    #return probability2(data)
     with open(outputFile, 'w') as PB:
         x = 0
-        for i in probability(corpus):
+        for i in probability(data):
             if x == 0:
                 PB.write("Transition unigram probability:\n")
             elif x == 1:
@@ -100,12 +113,6 @@ def calcluateProb(corpus="suc", outputFile="prob.txt"):
             x += 1
             for t, v in sorted(i.items()):
                 PB.write(str(t) + "\t" + str(v)  + "\n")
-                    
+
 if '__main__' == __name__:
     calcluateProb()
-
-
-
-
-
-
