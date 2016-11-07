@@ -28,8 +28,11 @@ def probability(listOfTuples):
     # For each sentece (list)
     for sent in listOfTuples:
 
+        # Add endtag in code
+        sentence = sent
+        sentence.append(('',''))
         # For each (word, pos)-tag tupple
-        for wpTag in sent:
+        for wpTag in sentence:
             if wpTag[1] == '':
                 # Add a starttag to dict
                 unigrams[startTag] = unigrams.get(startTag, 0) + 1
@@ -92,7 +95,6 @@ def calcluateProb(corpus="suc", outputFile=None):
     with open(corpus, 'r') as C:
         for line in C:
             if line == '\n':
-                senTag.append(('', ''))
                 data.append(senTag)
                 senTag = []
             else:
@@ -118,5 +120,5 @@ def calcluateProb(corpus="suc", outputFile=None):
                 PB.write(str(t) + "\t" + str(v)  + "\n")
 
 if '__main__' == __name__:
-    calcluateProb("suc", None)
+    calcluateProb("suc", "prob2.txt")
 
