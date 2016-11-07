@@ -84,7 +84,7 @@ def probability(listOfTuples):
     return uniProb, biProb, triProb, wordProb
 
 
-def calcluateProb(corpus="suc", outputFile="prob2.txt"):
+def calcluateProb(corpus="suc", outputFile=None):
     """This is used to create a more human readable file to check output"""
     data = []
     senTag = []
@@ -98,7 +98,10 @@ def calcluateProb(corpus="suc", outputFile="prob2.txt"):
             else:
                w, t = line.strip().split('\t')
                senTag.append((w, t))
-    #return probability2(data)
+
+    if outputFile == None:
+        return probability(data)
+
     with open(outputFile, 'w') as PB:
         x = 0
         for i in probability(data):
@@ -115,4 +118,5 @@ def calcluateProb(corpus="suc", outputFile="prob2.txt"):
                 PB.write(str(t) + "\t" + str(v)  + "\n")
 
 if '__main__' == __name__:
-    calcluateProb()
+    calcluateProb("suc", None)
+
