@@ -10,7 +10,7 @@ class Tagger():
         self.biProb = biProb
         self.triProb = triProb
         self.wordProb = wordProb
-        self.endTag = {'end' : 1.0} # Token end tag
+        self.endTag = {'end' : 1.0} # Filler end tag
 
         # Dictionary for when word not found
         self.posTags = dict()
@@ -23,9 +23,9 @@ class Tagger():
         if isinstance(sentToTag, list):
             sentence = sentToTag + [None] # Add extra value to list to be able to use end tag
         else:
-            return "Sentence not submitted in the corret format"
+            return "Sentence not submitted in the correct format"
 
-        # A list which holdes all sequences and there current probabilites
+        # A list which holds all sequences and there current probabilities
         possibleSeq = list()
         
         # A list to keep track of best path so far and possible best paths
