@@ -1,3 +1,7 @@
+"""This code consists of a tagger class which takes the dictionaries from the probCalc.py probabilities function.
+After the object has been created the method tagSentence() takes a list of tokens as parameter and returns a list of the same length
+with suggested tags."""
+
 class Tagger():
 
     def __init__(self, uniProb, biProb, triProb, wordProb):
@@ -6,7 +10,7 @@ class Tagger():
         self.biProb = biProb
         self.triProb = triProb
         self.wordProb = wordProb
-        self.endTag = {'end' : 1.0}
+        self.endTag = {'end' : 1.0} # Token end tag
 
         # Dictionary for when word not found
         self.posTags = dict()
@@ -17,7 +21,7 @@ class Tagger():
         """Takes a sentence (sequenced list) and returns a list of same length with PoS-tags"""
         # Make sure it's a sentence
         if isinstance(sentToTag, list):
-            sentence = sentToTag + [None]
+            sentence = sentToTag + [None] # Add extra value to list to be able to use end tag
         else:
             return "Sentence not submitted in the corret format"
 
@@ -34,6 +38,8 @@ class Tagger():
             
             # If there are tags for the word use them, otherwise check against all tags
             possibleTags = self.wordProb.get(word, self.posTags)
+            
+            # Filler ending
             if word == None:
                 possibleTags = self.endTag
 
@@ -46,7 +52,6 @@ class Tagger():
                     # Create bigram and trigram
                     trigram = ' '.join(path[1][-2:] + [tag])
                     bigram = ' '.join(path[1][-1:] + [tag])
-                    #bprint(trigram)
 
                     # We can calculate emission and old node value here
                     pathProb = path[0] * possibleTags[tag]
@@ -59,21 +64,24 @@ class Tagger():
                     else: # Otherwise just use unigram
                         pathProb *= self.uniProb[tag]
 
+                    # Add this as a possible path to current node
                     nodePosValues.append((pathProb, path[1] + [tag]))
 
+                # Keep the best path
                 newPaths.append(max(nodePosValues))
 
+            # Update current paths
             currentPaths = newPaths
             newPaths = []
 
+        # Return the best path
         currentPaths = max(currentPaths)
 
         # Return the Pos sequence without the two starting tags
         return currentPaths[1][2:-1]
 
-if __name__ == '__main__':        
-    import probCalc
 
-    uni, bi, tri, word = probCalc.probability("corpus.txt")
-    t = Tagger(uni, bi, tri, word)
+if __name__ == '__main__':        
+    """This is here by intention, this code is not meant to be run as main."""
+    pass
 
