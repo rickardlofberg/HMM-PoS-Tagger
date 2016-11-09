@@ -62,13 +62,14 @@ if '__main__' == __name__:
     2. If only a string is given a 1000 sequences will be written to a file with that name.
     3. If string and number is given both of the above apply. """
     try:
+        in1 = None
         in1 = sys.argv[1]
         in1 = int(in1)
     except:
         if not isinstance(in1, str):
             in1 = None
 
-    if not isinstance(in1, int):
+    if in1 and isinstance(in1, int) == False:
         corpName = in1
     else:
         # Make up corp name
@@ -84,6 +85,6 @@ if '__main__' == __name__:
             seq = in1
         else:
             seq = 1000
-
-        createCorpus(corpName, seq)
+    print(corpName, seq)
+    createCorpus(corpName, seq)
     print("A corpus of {} sequences has been written to {}".format(seq, corpName))
