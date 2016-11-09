@@ -85,6 +85,6 @@ if '__main__' == __name__:
             seq = in1
         else:
             seq = 1000
-    print(corpName, seq)
+
     createCorpus(corpName, seq)
     print("A corpus of {} sequences has been written to {}".format(seq, corpName))
