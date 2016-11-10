@@ -86,11 +86,7 @@ def probability(listOfTuples):
 
     # Trigram probability
     for trigram in trigrams:
-        bx = ' '.join(trigram.split(' ')[0:2])
-        #print(bx)
-        #print(bigbx)
-        triProb[trigram] = trigrams[trigram] / bigrams[bx]
-        #triProb[trigram] = trigrams[trigram] / unigrams[trigram.split(' ')[0]]
+        triProb[trigram] = trigrams[trigram] / bigrams[' '.join(trigram.split(' ')[0:2])]
 
     # Word has pos probability
     for word in wordIsPoS:
