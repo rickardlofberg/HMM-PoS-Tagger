@@ -24,7 +24,8 @@ def probability(listOfTuples):
     endTag = 'end' # Filler end tag
 
     # Tags to keep track of previous tags
-    t2 = startTag # This is T-2, i.e. two tags ago
+    #t2 = startTag # This is T-2, i.e. two tags ago
+    t2 = '' # This is T-2, i.e. two tags ago
     t1 = startTag # This is T-1, i.e one tag ago
     t0 = '' # This is t0, i.e. the current tag
     """ Example if "The dog ate" have the tags "ART NN VB" and we are checking ate:
@@ -50,7 +51,7 @@ def probability(listOfTuples):
                 word, t0 = tagWord
                 
             # Trigram, bigram and unigram count
-            trigram = ' '.join([t2, t1, t0]) # Create trigram
+            trigram = ' '.join([t2, t1, t0]).strip() # Create trigram
             trigrams[trigram] = trigrams.get(trigram, 0) + 1 # Increase trigram count
             bigram = ' '.join([t1, t0]) # Create bigram 
             bigrams[bigram] = bigrams.get(bigram, 0) + 1 # Increase bigram count
@@ -62,7 +63,7 @@ def probability(listOfTuples):
 
             # Update tags
             if word == '': # End of sentence
-                t2 = startTag
+                t2 = ''
                 t1 = startTag
             else:
                 t2 = t1
@@ -85,7 +86,11 @@ def probability(listOfTuples):
 
     # Trigram probability
     for trigram in trigrams:
-        triProb[trigram] = trigrams[trigram] / unigrams[trigram.split(' ')[0]]
+        bx = ' '.join(trigram.split(' ')[0:2])
+        #print(bx)
+        #print(bigbx)
+        triProb[trigram] = trigrams[trigram] / bigrams[bx]
+        #triProb[trigram] = trigrams[trigram] / unigrams[trigram.split(' ')[0]]
 
     # Word has pos probability
     for word in wordIsPoS:
