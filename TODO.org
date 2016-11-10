@@ -1,17 +1,11 @@
 * Things TODO
 
-** Build a tagger
-A tagger which takes a sentence and tags it
+** N-fold validation
+Code needed to run a n-fold validation on the tagger.
 
-** Function to feed the tagger
-A function which parses a corpus and feeds the tagger one sentence at a time, possibly write the output to a file
+** Implement deleted interpolation
+According to http://dl.acm.org/citation.cfm?id=974178 this might improve preformance.
 
-** Something that evaluates the tagging
-Compare the tagged corpus to our tagger, how good is it?
-
-** Something which cleans the corpus for us
-This code should clean the corpus so that we can parse it
-
-** Something which divide the corups in 10 pars for 10-fold validation
-We should train on 9 of the parts and hide the tenth part, this one we tag and evaluate.
+** Implement smoothing for unknown words
+Currently there is a problem for unknow words. We need to smooth the data to fix this.
 
