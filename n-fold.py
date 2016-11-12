@@ -8,7 +8,7 @@ def corpusReader(corpus):
 
     # Read the corpus and create two lists with all the data
     with open(corpus, 'r') as corp:
-        sentences = [] # All the sentecnes
+        sentences = [] # All the sentences
         correctTags = [] # Correct tags
         tagData = [] # The only one you need
 
@@ -21,7 +21,7 @@ def corpusReader(corpus):
             if line == '\n':
                 # Add correct tags to list
                 correctTags.append(tags)
-                # Add words to list of setence
+                # Add words to list of sentence
                 sentences.append(words)
                 # Add tagdata
                 tagData.append(oneTag)
@@ -39,7 +39,7 @@ def corpusReader(corpus):
 
 # Breaks a list into n parts and returns a list of the parts
 def dividList(alist, n):
-    """Divid a list into n equal parts (almost) and returns a list with each part as a list in the list"""
+    """Divide a list into n equal parts (almost) and returns a list with each part as a list in the list"""
     # Used for first n-1 parts
     n1 = int(len(alist) / n)
     # Used for last part to make sure which will get the rest to make it divide even
@@ -76,7 +76,7 @@ def evaluate(n, corpus):
         trainingParts = divTrain[:i] + divTrain[i+1:]
         train = []
 
-        # They need to be formated so that we can use the Tagger
+        # They need to be formatted so that we can use the Tagger
         for index in range(len(trainingParts)):
             train.extend(trainingParts[index])
         
@@ -96,7 +96,7 @@ def evaluate(n, corpus):
         for index in range(len(testingData)):
             tagged = tagger.tagSentence(testingData[index])
             for tag in range(len(tagged)):
-                # If correcnt
+                # If correct
                 if evaluationData[index][tag] == tagged[tag]:
                     correctTagCount += 1
                 else:
