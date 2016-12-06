@@ -12,7 +12,7 @@ In brief `corpCreate.py` is used to create a corpus in the format which the othe
 The output will be written to a file and the user can also choose the amount of "sentences" to write. The format of the outputfile is a tab seperated file with the word to the left and PoS-tag to the right. This is the format which is also used by `probCalc.py` to calculate the probabilties needed for tagging.
 An example of running this program is:
 
-`ython3 corpCreate.py myCorpus 10000`
+`python3 corpCreate.py myCorpus 10000`
 
 Which will write 10 000 "sentences" to the file myCorpus.
 
