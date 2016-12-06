@@ -4,8 +4,6 @@ import sys
 import os.path
 from random import random, seed
 
-seed = 1
-
 def corpusReader(corpus):
     """A function which parses a corpus and returns three lists. one with all the sentences, one with all the correct tags and a one with both"""
 
@@ -41,17 +39,27 @@ def corpusReader(corpus):
     return sentences, correctTags, tagData
 
 # Breaks a list into n parts and returns a list of the parts
-def dividList(alist, n):
+def dividList(alist, n, startSeed):
     """Divide a list into n equal parts (almost) and returns a list with each part as a list in the list"""
-    # Used for first n-1 parts
-    n1 = int(len(alist) / n)
-    # Used for last part to make sure which will get the rest to make it divide even
-    n2 = int((len(alist) / n) + len(alist) % n)
+    seed(startSeed)
+    
+    # Create a table of tables with n internal tables to hold output data
+    data = [[] for _ in range(n)] 
 
-    # Get the first n-1 parts
-    data = [alist[i:i+n1] for i in range(0, len(alist)-n2, n1)]
-    # Get the last part + extra modulo lists
-    data.extend([alist[i:i+n2] for i in range(len(alist)-n2, len(alist), n2)])
+    # Copy the input data to not corrupt the list
+    inData = alist.copy()
+    
+    # While there is still data in the list
+    while len(inData) != 0:
+        for i in range(n):
+            try: # To escape issues if all values are removed
+                # Remove a sentence from inData
+                getSent = inData.pop(int(random() * len(inData)))
+                # Append to sublist i
+                data[i].append(getSent)
+            except:
+                pass
+
     return data
 
 def evaluate(n, corpus):
@@ -62,61 +70,75 @@ def evaluate(n, corpus):
 
     # Get all the data
     sentences, correctTags, tagData = corpusReader(corpus)
+    allCor = []
+    allIncor = []
 
-    # Divide all the data
-    divSent = dividList(sentences, n)
-    divTags = dividList(correctTags, n)
-    divTrain = dividList(tagData, n)
-    # To count the total of incorrect and correct tags
-    correctlyTagged = []
-    incorrectlyTagged = []
 
-    print("Calculation {}-fold on {}\n".format(n, corpus))
+    for check in range(1, n+1):
+        # Divide all the data
+        divSent = dividList(sentences, n, check)
+        divTags = dividList(correctTags, n, check)
+        divTrain = dividList(tagData, n, check)
+        # To count the total of incorrect and correct tags
+        correctlyTagged = []
+        incorrectlyTagged = []
 
-    # For each part to evaluate
-    for i in range(0, n):
-        # Get the parts to train on
-        trainingParts = divTrain[:i] + divTrain[i+1:]
-        train = []
+        print("Check {} doing {}-fold on {}\n".format(check, n, corpus))
 
-        # They need to be formatted so that we can use the Tagger
-        for index in range(len(trainingParts)):
-            train.extend(trainingParts[index])
+        # For each part to evaluate
+        for i in range(0, n):
+            # Get the parts to train on
+            trainingParts = divTrain[:i] + divTrain[i+1:]
+            train = []
+
+            # They need to be formatted so that we can use the Tagger
+            for index in range(len(trainingParts)):
+                train.extend(trainingParts[index])
         
-        # Get the testing and evaluation data
-        testingData = divSent[i]
-        evaluationData = divTags[i]
+                # Get the testing and evaluation data
+                testingData = divSent[i]
+                evaluationData = divTags[i]
         
-        # Do some training
-        uni, bi, tri, word = PB(train)
-        tagger = Tagger(uni, bi, tri, word)
+                # Do some training
+                uni, bi, tri, word = PB(train)
+                tagger = Tagger(uni, bi, tri, word)
         
-        # Reset counts
-        correctTagCount = 0
-        incorrectTagCount = 0
+                # Reset counts
+                correctTagCount = 0
+                incorrectTagCount = 0
 
-        # Go through each sentence and tag it
-        for index in range(len(testingData)):
-            tagged = tagger.tagSentence(testingData[index])
-            for tag in range(len(tagged)):
-                # If correct
-                if evaluationData[index][tag] == tagged[tag]:
-                    correctTagCount += 1
-                else:
-                    incorrectTagCount += 1
+            # Go through each sentence and tag it
+            for index in range(len(testingData)):
+                tagged = tagger.tagSentence(testingData[index])
+                for tag in range(len(tagged)):
+                    # If correct
+                    if evaluationData[index][tag] == tagged[tag]:
+                        correctTagCount += 1
+                    else:
+                        incorrectTagCount += 1
             
-        # Print to let you know I haven't forgotten about you.
-        print("{}-fold was tagged {}% correctly.".format(i+1, round(correctTagCount / (correctTagCount + incorrectTagCount)*100,2 )))
+            # Print to let you know I haven't forgotten about you.
+            print("{}-fold was tagged {}% correctly.".format(i+1, round(correctTagCount / (correctTagCount + incorrectTagCount)*100,2 )))
 
-        # Save n-fold counts
-        correctlyTagged.append(correctTagCount)
-        incorrectlyTagged.append(incorrectTagCount)
+            # Save n-fold counts
+            correctlyTagged.append(correctTagCount)
+            incorrectlyTagged.append(incorrectTagCount)
+
+        allCor.extend(correctlyTagged)
+        allIncor.extend(incorrectlyTagged)
+
+        # Total in numbers..
+        print("\n{} out of {} was correctly tagged.".format(sum(correctlyTagged), sum(correctlyTagged) + sum(incorrectlyTagged)))
+
+        # .. and percentage
+        print("\nFor a total of {}% correctness.".format(round(sum(correctlyTagged) / (sum(correctlyTagged) + sum(incorrectlyTagged))*100, 2)))
 
     # Total in numbers..
-    print("\n{} out of {} was correctly tagged.".format(sum(correctlyTagged), sum(correctlyTagged) + sum(incorrectlyTagged)))
+    print("\n{} out of {} was correctly tagged.".format(sum(allCor), sum(allCor) + sum(allIncor)))
 
     # .. and percentage
-    print("\nFor a total of {}% correctness.".format(round(sum(correctlyTagged) / (sum(correctlyTagged) + sum(incorrectlyTagged))*100,2 )))
+    print("\nFor a total of {}% correctness.".format(round(sum(allCor) / (sum(allCor) + sum(allIncor))*100, 2)))
+
 
 
 if __name__ == '__main__':
