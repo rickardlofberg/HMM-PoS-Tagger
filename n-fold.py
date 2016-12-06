@@ -2,6 +2,9 @@ from probCalc import probability as PB
 from tagger import Tagger
 import sys
 import os.path
+from random import random, seed
+
+seed = 1
 
 def corpusReader(corpus):
     """A function which parses a corpus and returns three lists. one with all the sentences, one with all the correct tags and a one with both"""
@@ -10,7 +13,7 @@ def corpusReader(corpus):
     with open(corpus, 'r') as corp:
         sentences = [] # All the sentences
         correctTags = [] # Correct tags
-        tagData = [] # The only one you need
+        tagData = [] # Sentences with word and tags
 
         # Initiate temporary data holders
         words, tags, oneTag = [], [], []
@@ -34,7 +37,7 @@ def corpusReader(corpus):
                 tags.append(line.split()[1])
                 bothTags = (line.split()[0], line.split()[1])
                 oneTag.append(bothTags)
-
+    print(len(sentences))
     return sentences, correctTags, tagData
 
 # Breaks a list into n parts and returns a list of the parts
