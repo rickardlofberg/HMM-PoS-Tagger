@@ -1,8 +1,5 @@
 * Things TODO
 
-** N-fold validation
-Code needed to run a n-fold validation on the tagger.
-
 ** Implement deleted interpolation
 According to http://dl.acm.org/citation.cfm?id=974178 this might improve preformance.
 
